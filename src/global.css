@@ -1,0 +1,207 @@
+/* --------------------- RESET --------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* --------------------- BODY ---------------------- */
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: #F0F4FA;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Modo oscuro */
+body.dark {
+  background: #121212;
+  color: #e5e5e5;
+}
+
+/* --------------------- CARD ---------------------- */
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 22px;
+  max-width: 450px;
+  width: 100%;
+  box-shadow: 0px 10px 25px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: fadeIn 0.4s ease;
+}
+
+/* Tarjeta modo oscuro */
+body.dark .card {
+  background: #1e1e1e;
+  color: #f1f1f1;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+/* --------------------- BUTTONS ------------------- */
+button {
+  background: #6cbc34;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+button:hover {
+  background: #5aa82c;
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* Botón incorrecto */
+button.red {
+  background: #ff5252;
+}
+
+/* Botón siguiente */
+.next-btn {
+  background: #4a7fc1;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.next-btn:hover {
+  background: #3b6ba5;
+}
+
+/* Modo oscuro botón */
+body.dark button {
+  background: #3a7f44;
+}
+
+body.dark button:disabled {
+  background: #557b55;
+}
+
+/* --------------------- INPUT --------------------- */
+input {
+  padding: 14px;
+  border: 2px solid #dce2ee;
+  border-radius: 14px;
+  width: 100%;
+  font-size: 18px;
+  transition: 0.2s ease;
+}
+
+input:focus {
+  border-color: #58CC02;
+  outline: none;
+}
+
+/* Modo oscuro input */
+body.dark input {
+  background: #292929;
+  border: 2px solid #444;
+  color: white;
+}
+
+/* --------------------- FLAG IMG ------------------ */
+.flag {
+  width: 80px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  align-self: center;
+}
+
+/* --------------------- FEEDBACK ------------------ */
+.correct {
+  color: #5aa82c;
+}
+
+.incorrect {
+  color: #ff5252;
+  font-weight: bold;
+}
+
+body.dark .feedback {
+  color: #e2e2e2;
+}
+
+/* --------------------- PROGRESS BAR -------------- */
+.progress-container {
+  width: 90%;
+  height: 10px;
+  background: #e0e0e0;
+  border-radius: 10px;
+  margin: 10px auto 25px auto;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #4caf50;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+body.dark .progress-container {
+  background: #333;
+}
+
+body.dark .progress-bar {
+  background: #76d47f;
+}
+
+/* -------------------- DARK MODE BUTTON ------------ */
+.dark-toggle {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background: #333;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.dark-toggle:hover {
+  background: #444;
+}
+
+/* --------------------- ANIMATIONS ----------------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.correct-anim {
+  animation: correctBounce 0.5s ease-out;
+}
+
+@keyframes correctBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.shake {
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-6px); }
+  100% { transform: translateX(0); }
+}
