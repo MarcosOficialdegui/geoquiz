@@ -68,3 +68,6 @@ body.dark .back-btn {
 body.dark .back-btn:hover {
   background: #505050;
 }
+
+.back-btn { background:#a8d8ff; color:#4a3f35; padding:8px 12px; border-radius:10px; }
+.next-btn { background:#4a7fc1; color:white; padding:10px 14px; border-radius:10px; margin-top:12px; }

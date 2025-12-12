@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
 import CountryCard from "./CountryCard";
+import ModeSelector from "./ModeSelector";
 import SelectContinent from "./SelectContinent";
 import { countries } from "../data/countries";
 import "./Quiz.css";
 
 export default function Quiz() {
+  const [mode, setMode] = useState<"text" | "choice" | null>(null);
   const [continent, setContinent] = useState<string | null>(null);
   const [filtered, setFiltered] = useState<any[]>([]);
   const [index, setIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [mustClickNext, setMustClickNext] = useState(false);
 
-  // ☆ Mezclar países
-  function shuffle(arr: any[]) {
+  function shuffle<T>(arr: T[]) {
     const a = [...arr];
     for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -21,54 +22,50 @@ export default function Quiz() {
     return a;
   }
 
-  // ☆ Cuando elige continente, mezclamos y reiniciamos
   useEffect(() => {
-    if (!continent) return;
-
+    if (!mode || !continent) return;
     const base =
       continent === "World"
         ? countries
         : countries.filter((c) => c.continent === continent);
-
     setFiltered(shuffle(base));
     setIndex(0);
     setCorrect(0);
     setMustClickNext(false);
-  }, [continent]);
+  }, [mode, continent]);
 
-  // ☆ Permitir “Enter” para avanzar después de fallar
   useEffect(() => {
     if (!mustClickNext) return;
-
     const handleEnter = (e: KeyboardEvent) => {
       if (e.key === "Enter") goNext();
     };
-
     window.addEventListener("keydown", handleEnter);
     return () => window.removeEventListener("keydown", handleEnter);
   }, [mustClickNext]);
 
-  // ☆ Si aún no eligió continente → mostrar menú
+  // primer paso: elegir modo
+  if (!mode) {
+    return <ModeSelector onChoose={(m) => setMode(m)} onBack={() => setMode(null)} />;
+  }
+
+  // segundo paso: elegir continente
   if (!continent) {
     return <SelectContinent onSelect={(c) => setContinent(c)} />;
   }
 
-  // ☆ Juego terminado
+  // si ya no hay más países
   if (index >= filtered.length) {
     return (
       <div className="card">
-
         <button className="btn back-btn" onClick={() => setContinent(null)}>
-          ⬅ Volver al menú
+          ⬅ Volver al continente
         </button>
 
         <h2>Juego terminado</h2>
-        <p className="score">
-          Puntaje: {correct} / {filtered.length}
-        </p>
+        <p className="score">Puntaje: {correct} / {filtered.length}</p>
 
-        <button className="btn" onClick={() => window.location.reload()}>
-          Reiniciar
+        <button className="btn" onClick={() => { setMode(null); setContinent(null); }}>
+          Volver al inicio
         </button>
       </div>
     );
@@ -76,7 +73,6 @@ export default function Quiz() {
 
   const current = filtered[index];
 
-  // ☆ Lógica: solo avanza automático si acierta
   const handleResult = (isCorrect: boolean) => {
     if (isCorrect) {
       setCorrect((c) => c + 1);
@@ -94,31 +90,27 @@ export default function Quiz() {
 
   return (
     <>
-      {/* ☆ BOTÓN PARA VOLVER AL MENÚ DURANTE EL JUEGO */}
-      <button className="btn back-btn" onClick={() => setContinent(null)}>
-        ⬅ Volver al menú
-      </button>
-
-      <p className="score">Puntaje: {correct} / {index}</p>
+      <div style={{ display: "flex", gap: 12, justifyContent: "space-between", alignItems: "center", width: "100%", maxWidth: 560 }}>
+        <button className="btn back-btn" onClick={() => setMode(null)}>⬅ Volver</button>
+        <p className="score">Puntaje: {correct} / {index}</p>
+      </div>
 
       <div className="progress-container">
-        <div
-          className="progress-bar"
-          style={{ width: `${(index / filtered.length) * 100}%` }}
-        />
+        <div className="progress-bar" style={{ width: `${(index / filtered.length) * 100}%` }} />
       </div>
 
       <CountryCard
+        key={index} // fuerza remount limpio
         country={current.country}
         capital={current.capital}
         flag={current.flag}
+        mode={mode}
+        allCountries={filtered}
         onNext={handleResult}
       />
 
       {mustClickNext && (
-        <button className="btn next-btn" onClick={goNext}>
-          Siguiente
-        </button>
+        <button className="btn next-btn" onClick={goNext}>Siguiente</button>
       )}
     </>
   );
